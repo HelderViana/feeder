@@ -58,11 +58,19 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 			<link><?php echo $shop_uri ?></link>
 		</image>
 <?php
+	echo '<products>';
 	foreach ($products AS $product)
 	{
 		$image = Image::getImages((int)($cookie->id_lang), $product['id_product']);
-		echo "\t\t<item>\n";
-		echo "\t\t\t<title><![CDATA[".$product['name']." - ".html_entity_decode(Tools::displayPrice(Product::getPriceStatic($product['id_product']), $currency), ENT_COMPAT, 'UTF-8')." ]]></title>\n";
+		echo "\t\t<product>\n";
+		echo "\t\t\t<id_product>" . $product['id_product'] . "</id_product>";
+		echo "\t\t\t<designation>" . $product['id_product'] . "</designation>";
+		echo "\t\t\t<category>" . $product['id_product'] . "</category>";
+		echo "\t\t\t<brand>" . $product['id_product'] . "</brand>";
+		echo "\t\t\t<reference>" . $product['id_product'] . "</reference>";
+		echo "\t\t\t<ean>" . $product['id_product'] . "</ean>";
+
+		//echo "\t\t\t<title><![CDATA[".$product['name']." - ".html_entity_decode(Tools::displayPrice(Product::getPriceStatic($product['id_product']), $currency), ENT_COMPAT, 'UTF-8')." ]]></title>\n";
 		echo "\t\t\t<description>";
 		$cdata = true;
 		if (is_array($image) AND sizeof($image))
@@ -75,9 +83,15 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 			echo "<![CDATA[";
 		echo $product['description_short']."]]></description>\n";
 
-		echo "\t\t\t<link><![CDATA[".str_replace('&amp;', '&', htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang)))).$affiliate."]]></link>\n";
-		echo "\t\t</item>\n";
+		echo "\t\t\t<product_url><![CDATA[".str_replace('&amp;', '&', htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang)))).$affiliate."]]></product_url>\n";
+		echo "\t\t\t<image_url></image_url>";
+		echo "\t\t\t<price></price>";
+		echo "\t\t\t<promotional_price></promotional_price>";		
+		echo "\t\t\t<shipping_value></shipping_value>";
+		echo "\t\t\t<store_fee></store_fee>";
+		echo "\t\t</product>\n";
 	}
+	echo '</products>';
 ?>
 	</channel>
 </rss>
