@@ -45,20 +45,20 @@ header("Content-Type:text/xml; charset=utf-8");
 echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 //Configuration::get('PS_SHOP_NAME') shop name
 //Configuration::get('PS_SHOP_EMAIL') email
-echo '<products>';
+echo "<products>\n";
 foreach ($products AS $product)
 {
 	$image = Image::getImages((int)($cookie->id_lang), $product['id_product']);
-	echo "\t\t<product>\n";
-	echo "\t\t\t<id_product>" . $product['id_product'] . "</id_product>\n";
-	echo "\t\t\t<designation>" . $product['name'] . "</designation>\n";
-	echo "\t\t\t<category>" . $product['category_default'] . "</category>\n";
-	echo "\t\t\t<brand>" . $product['id_product'] . "</brand>\n";
-	echo "\t\t\t<reference>" . $product['reference'] . "</reference>\n";
-	echo "\t\t\t<ean>" . $product['ean13'] . "</ean>\n";
+	echo "\t<product>\n";
+	echo "\t\t<id_product>" . $product['id_product'] . "</id_product>\n";
+	echo "\t\t<designation>" . $product['name'] . "</designation>\n";
+	echo "\t\t<category>" . $product['category_default'] . "</category>\n";
+	echo "\t\t<brand>" . $product['id_product'] . "</brand>\n";
+	echo "\t\t<reference>" . $product['reference'] . "</reference>\n";
+	echo "\t\t<ean>" . $product['ean13'] . "</ean>\n";
 
 	//echo "\t\t\t<title><![CDATA[".$product['name']." - ".html_entity_decode(Tools::displayPrice(Product::getPriceStatic($product['id_product']), $currency), ENT_COMPAT, 'UTF-8')." ]]></title>\n";
-	echo "\t\t\t<description>";
+	echo "\t\t<description>";
 	$cdata = true;
 	$localImageUrl = "";
 	if (is_array($image) AND sizeof($image))
@@ -72,14 +72,14 @@ foreach ($products AS $product)
 		echo "<![CDATA[";
 	echo $product['description']."]]></description>\n";
 
-	echo "\t\t\t<product_url><![CDATA[".str_replace('&amp;', '&', htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang)))).$affiliate."]]></product_url>\n";
-	echo "\t\t\t<image_url>" . str_replace('&amp;', '&', htmlspecialchars($localImageUrl)) . "</image_url>\n";
-	echo "\t\t\t<price>" . $product['price'] . "</price>\n";
-	echo "\t\t\t<promotional_price></promotional_price>\n";		
-	echo "\t\t\t<shipping_value></shipping_value>\n";
-	echo "\t\t\t<store_fee></store_fee>\n";
-	echo "\t\t</product>\n";
+	echo "\t\t<product_url><![CDATA[".str_replace('&amp;', '&', htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang)))).$affiliate."]]></product_url>\n";
+	echo "\t\t<image_url>" . str_replace('&amp;', '&', htmlspecialchars($localImageUrl)) . "</image_url>\n";
+	echo "\t\t<price>" . $product['price'] . "</price>\n";
+	echo "\t\t<promotional_price></promotional_price>\n";		
+	echo "\t\t<shipping_value></shipping_value>\n";
+	echo "\t\t<store_fee></store_fee>\n";
+	echo "\t</product>\n";
 }
-echo '</products>';
+echo "</products>\n";
 ?>
 
