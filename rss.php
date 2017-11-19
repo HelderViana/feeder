@@ -33,7 +33,7 @@ if (!Module::getInstanceByName('feeder')->active)
 $number = ((int)(Tools::getValue('n')) ? (int)(Tools::getValue('n')) : 10);
 $orderBy = Tools::getProductsOrder('by', Tools::getValue('orderby'));
 $orderWay = Tools::getProductsOrder('way', Tools::getValue('orderway'));
-$id_category = ((int)(Tools::getValue('id_category')) ? (int)(Tools::getValue('id_category')) : Configuration::get('PS_HOME_CATEGORY'));
+$id_category = ((int)(Tools::getValue('id_category')) ? (int)(Tools::getValue('id_category')) : Configuration::get('PS_HOME_CATEGORY'));														
 $products = Product::getProducts((int)$context->language->id, 0, ($number > 10 ? 10 : $number), $orderBy, $orderWay, $id_category, true);
 $currency = new Currency((int)$context->currency->id);
 $affiliate = (Tools::getValue('ac') ? '?ac='.(int)(Tools::getValue('ac')) : '');
@@ -64,28 +64,30 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 		$image = Image::getImages((int)($cookie->id_lang), $product['id_product']);
 		echo "\t\t<product>\n";
 		echo "\t\t\t<id_product>" . $product['id_product'] . "</id_product>";
-		echo "\t\t\t<designation>" . $product['id_product'] . "</designation>";
-		echo "\t\t\t<category>" . $product['id_product'] . "</category>";
+		echo "\t\t\t<designation>" . $product['name'] . "</designation>";
+		echo "\t\t\t<category>" . $product['category_default'] . "</category>";
 		echo "\t\t\t<brand>" . $product['id_product'] . "</brand>";
-		echo "\t\t\t<reference>" . $product['id_product'] . "</reference>";
-		echo "\t\t\t<ean>" . $product['id_product'] . "</ean>";
+		echo "\t\t\t<reference>" . $product['reference'] . "</reference>";
+		echo "\t\t\t<ean>" . $product['ean13'] . "</ean>";
 
 		//echo "\t\t\t<title><![CDATA[".$product['name']." - ".html_entity_decode(Tools::displayPrice(Product::getPriceStatic($product['id_product']), $currency), ENT_COMPAT, 'UTF-8')." ]]></title>\n";
 		echo "\t\t\t<description>";
 		$cdata = true;
+		$localImageUrl = "";
 		if (is_array($image) AND sizeof($image))
 		{
 			$imageObj = new Image($image[0]['id_image']);
 			echo "<![CDATA[<img src='".$link->getImageLink($product['link_rewrite'], $image[0]['id_image'], 'small_default')."' title='".str_replace('&', '', $product['name'])."' alt='thumb' />";
 			$cdata = false;
+			$localImageUrl = $link->getImageLink($product['link_rewrite'], $image[0]['id_image'], 'small_default');
 		}
 		if ($cdata)
 			echo "<![CDATA[";
-		echo $product['description_short']."]]></description>\n";
+		echo $product['description']."]]></description>\n";
 
 		echo "\t\t\t<product_url><![CDATA[".str_replace('&amp;', '&', htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang)))).$affiliate."]]></product_url>\n";
-		echo "\t\t\t<image_url></image_url>";
-		echo "\t\t\t<price></price>";
+		echo "\t\t\t<image_url>" . .str_replace('&amp;', '&', htmlspecialchars($localImageUrl) . "</image_url>";
+		echo "\t\t\t<price>" . $product['price'] . "</price>";
 		echo "\t\t\t<promotional_price></promotional_price>";		
 		echo "\t\t\t<shipping_value></shipping_value>";
 		echo "\t\t\t<store_fee></store_fee>";
