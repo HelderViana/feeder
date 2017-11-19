@@ -22,6 +22,7 @@
 *  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
+*  Changed by Helder S. Viana, to handle with the kuantokusta format: http://www.kuantokusta.com/kuantokusta.xml
 */
 include(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
@@ -64,11 +65,11 @@ foreach ($products AS $product)
 	if (is_array($image) AND sizeof($image))
 	{
 		$imageObj = new Image($image[0]['id_image']);
-		echo "<![CDATA[<img src='".$link->getImageLink($product['link_rewrite'], $image[0]['id_image'], 'small_default')."' title='".str_replace('&', '', $product['name'])."' alt='thumb' />";
+		//echo "<![CDATA[<img src='".$link->getImageLink($product['link_rewrite'], $image[0]['id_image'], 'small_default')."' title='".str_replace('&', '', $product['name'])."' alt='thumb' />";
 		$cdata = false;
 		$localImageUrl = $link->getImageLink($product['link_rewrite'], $image[0]['id_image'], 'small_default');
 	}
-	if ($cdata)
+	//if ($cdata)
 		echo "<![CDATA[";
 	echo $product['description']."]]></description>\n";
 
