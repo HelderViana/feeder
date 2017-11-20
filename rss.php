@@ -75,7 +75,7 @@ foreach ($products AS $product)
 
 	echo "\t\t<product_url><![CDATA[".str_replace('&amp;', '&', htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang)))).$affiliate."]]></product_url>\n";
 	echo "\t\t<image_url>" . str_replace('&amp;', '&', htmlspecialchars($localImageUrl)) . "</image_url>\n";
-	echo "\t\t<price>" . $product['price'] . "</price>\n";
+	echo "\t\t<price>" . round(($product['price'] / 100) * $product['tax_rate'], 2) . "</price>\n";
 	echo "\t\t<promotional_price></promotional_price>\n";		
 	echo "\t\t<shipping_value></shipping_value>\n";
 	echo "\t\t<store_fee></store_fee>\n";
