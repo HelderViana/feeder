@@ -31,11 +31,11 @@ if (!Module::getInstanceByName('feeder')->active)
 	exit;
 
 // Get data
-$number = ((int)(Tools::getValue('n')) ? (int)(Tools::getValue('n')) : 10);
+$number = ((int)(Tools::getValue('n')) ? (int)(Tools::getValue('n')) : 1000);
 $orderBy = Tools::getProductsOrder('by', Tools::getValue('orderby'));
 $orderWay = Tools::getProductsOrder('way', Tools::getValue('orderway'));
 $id_category = ((int)(Tools::getValue('id_category')) ? (int)(Tools::getValue('id_category')) : Configuration::get('PS_HOME_CATEGORY'));														
-$products = Product::getProducts((int)$context->language->id, 0, ($number > 10 ? 10 : $number), $orderBy, $orderWay, $id_category, true);
+$products = Product::getProducts((int)$context->language->id, 0, 1000/*($number > 1000 ? 1000 : $number)*/, $orderBy, $orderWay, $id_category, true);
 $currency = new Currency((int)$context->currency->id);
 $affiliate = (Tools::getValue('ac') ? '?ac='.(int)(Tools::getValue('ac')) : '');
 $metas = Meta::getMetaByPage('index', (int)$context->language->id);
@@ -54,7 +54,7 @@ foreach ($products AS $product)
 	echo "\t\t<id_product>" . $product['id_product'] . "</id_product>\n";
 	echo "\t\t<designation>" . $product['name'] . "</designation>\n";
 	echo "\t\t<category>" . $product['category_default'] . "</category>\n";
-	echo "\t\t<brand>" . $product['id_product'] . "</brand>\n";
+	echo "\t\t<brand>" . $product['manufacturer_name'] . "</brand>\n";
 	echo "\t\t<reference>" . $product['reference'] . "</reference>\n";
 	echo "\t\t<ean>" . $product['ean13'] . "</ean>\n";
 
@@ -76,9 +76,9 @@ foreach ($products AS $product)
 	echo "\t\t<product_url><![CDATA[".str_replace('&amp;', '&', htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang)))).$affiliate."]]></product_url>\n";
 	echo "\t\t<image_url>" . str_replace('&amp;', '&', htmlspecialchars($localImageUrl)) . "</image_url>\n";
 	echo "\t\t<price>" . round(($product['price'] / 100) * $product['tax_rate'], 2) . "</price>\n";
-	echo "\t\t<promotional_price></promotional_price>\n";		
-	echo "\t\t<shipping_value></shipping_value>\n";
-	echo "\t\t<store_fee></store_fee>\n";
+	echo "\t\t<promotional_price />\n";		
+	echo "\t\t<shipping_value />\n";
+	echo "\t\t<store_fee />\n";
 	echo "\t</product>\n";
 }
 echo "</products>\n";
