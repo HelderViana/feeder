@@ -2,6 +2,7 @@
 
 ## About
 
+This is my aproach to the kuantokusta Item feed provider, using Prestashop stores.
 Generate a RSS feed for your latest products.
 
 ## Contributing
