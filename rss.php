@@ -22,6 +22,7 @@
 *  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
+*  
 *  Changed by Helder S. Viana, to handle with the kuantokusta format: http://www.kuantokusta.com/kuantokusta.xml
 */
 include(dirname(__FILE__).'/../../config/config.inc.php');
@@ -35,12 +36,12 @@ $number = ((int)(Tools::getValue('n')) ? (int)(Tools::getValue('n')) : 1000);
 $orderBy = Tools::getProductsOrder('by', Tools::getValue('orderby'));
 $orderWay = Tools::getProductsOrder('way', Tools::getValue('orderway'));
 $id_category = ((int)(Tools::getValue('id_category')) ? (int)(Tools::getValue('id_category')) : Configuration::get('PS_HOME_CATEGORY'));														
-$products = Product::getProducts((int)$context->language->id, 0, 1000/*($number > 1000 ? 1000 : $number)*/, $orderBy, $orderWay, $id_category, true);
+$products = Product::getProducts((int)$context->language->id, 0, ($number > 1000 ? 1000 : $number), $orderBy, $orderWay);
 $currency = new Currency((int)$context->currency->id);
 $affiliate = (Tools::getValue('ac') ? '?ac='.(int)(Tools::getValue('ac')) : '');
 $metas = Meta::getMetaByPage('index', (int)$context->language->id);
 $shop_uri = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__;
-
+$i = 0;
 // Send feed
 header("Content-Type:text/xml; charset=utf-8");
 echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
@@ -52,7 +53,7 @@ foreach ($products AS $product)
 	$image = Image::getImages((int)($cookie->id_lang), $product['id_product']);
 	echo "\t<product>\n";
 	echo "\t\t<id_product>" . $product['id_product'] . "</id_product>\n";
-	echo "\t\t<designation>" . $product['name'] . "</designation>\n";
+	echo "\t\t<designation><![CDATA[" . $product['name'] . "]]></designation>\n";
 	echo "\t\t<category>" . $product['category_default'] . "</category>\n";
 	echo "\t\t<brand>" . $product['manufacturer_name'] . "</brand>\n";
 	echo "\t\t<reference>" . $product['reference'] . "</reference>\n";
@@ -71,15 +72,20 @@ foreach ($products AS $product)
 	}
 	//if ($cdata)
 		echo "<![CDATA[";
-	echo $product['description']."]]></description>\n";
+	echo str_replace('&amp;', '&', strip_tags($product['description']))."]]></description>\n";
 
 	echo "\t\t<product_url><![CDATA[".str_replace('&amp;', '&', htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang)))).$affiliate."]]></product_url>\n";
-	echo "\t\t<image_url>" . str_replace('&amp;', '&', htmlspecialchars($localImageUrl)) . "</image_url>\n";
-	echo "\t\t<price>" . round(($product['price'] / 100) * $product['tax_rate'], 2) . "</price>\n";
+	echo "\t\t<image_url><![CDATA[" . str_replace('&amp;', '&', htmlspecialchars($localImageUrl)) . "]]></image_url>\n";
+	echo "\t\t<price>" . round(((($product['price'] / 100) * 23) + $product['price']), 2) . "</price>\n";
 	echo "\t\t<promotional_price />\n";		
 	echo "\t\t<shipping_value />\n";
 	echo "\t\t<store_fee />\n";
+	//echo "\t\t<price>" . round(($product['price'] / 100) * $product['tax_rate'], 2) . "</price>\n";
+	//echo "\t\t<promotional_price />\n";		
+	//echo "\t\t<shipping_value />\n";
+	//echo "\t\t<store_fee>" .$i . "</store_fee>\n";
 	echo "\t</product>\n";
+	$i = $i + 1;
 }
 echo "</products>\n";
 ?>
